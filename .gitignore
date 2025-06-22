@@ -1,0 +1,54 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Cache and temporary files
+/storage/framework/
+/storage/app/
+/storage/cache/
+*.cache
+*.tmp
+
+# User uploaded content
+/storage/profiles/*
+!/storage/profiles/.gitkeep
+/storage/ids/*
+!/storage/ids/.gitkeep
+
+# Build files
+/public/build/
+/public/hot
+/public/storage
+/public/mix-manifest.json
+
+# Testing
+/phpunit.xml
+.phpunit.result.cache
+/tests/coverage/ 

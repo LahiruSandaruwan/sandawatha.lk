@@ -1,0 +1,144 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set the base directory for rewrites
+RewriteBase /
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Set default timezone (adjust as needed)
+SetEnv TZ Asia/Colombo
+
+# Protect against XSS, clickjacking and other vulnerabilities
+<IfModule mod_headers.c>
+    # Protect against clickjacking
+    Header set X-Frame-Options "SAMEORIGIN"
+    # Protect against XSS attacks
+    Header set X-XSS-Protection "1; mode=block"
+    # Disable MIME-type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    # Enable strict transport security (if using HTTPS)
+    Header set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+    # Referrer policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval';"
+</IfModule>
+
+# Block access to sensitive files and directories
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to specific file types
+<FilesMatch "\.(env|config|json|lock|git|sql|md|log|sh|yml|yaml|xml)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect sensitive directories
+RedirectMatch 403 ^/app/?$
+RedirectMatch 403 ^/config/?$
+RedirectMatch 403 ^/vendor/?$
+RedirectMatch 403 ^/uploads/?$
+RedirectMatch 403 ^/tests/?$
+RedirectMatch 403 ^/logs/?$
+RedirectMatch 403 ^/node_modules/?$
+
+# Allow access to specific file types in uploads directory
+<LocationMatch "^/uploads/profile_photos/.*\.(jpg|jpeg|png|gif|webp)$">
+    Order allow,deny
+    Allow from all
+</LocationMatch>
+
+# Enable CORS for API if needed
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|css|js)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+</IfModule>
+
+# Compress text files
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Cache control for static files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# URL Rewriting Rules
+
+# Redirect www to non-www
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Allow direct access to actual files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Clean URLs for profile pages
+RewriteRule ^profile/([0-9]+)/?$ profile.php?id=$1 [NC,L]
+
+# Clean URLs for search
+RewriteRule ^search/([^/]+)/?$ search.php?q=$1 [NC,L]
+
+# Clean URLs for categories/filters
+RewriteRule ^filter/([^/]+)/([^/]+)/?$ filter.php?type=$1&value=$2 [NC,L]
+
+# Clean URLs for language switching
+RewriteRule ^lang/(en|si|ta)/?$ index.php?lang=$1 [NC,L]
+
+# Redirect all other requests to index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Custom error pages
+ErrorDocument 400 /errors/400.php
+ErrorDocument 401 /errors/401.php
+ErrorDocument 403 /errors/403.php
+ErrorDocument 404 /errors/404.php
+ErrorDocument 500 /errors/500.php
+
+# Prevent access to .htaccess
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Additional Security Headers
+<IfModule mod_headers.c>
+    # Disable PHP version info
+    Header unset X-Powered-By
+    # Prevent PHP information leakage
+    Header unset X-PHP-Version
+    # Server information
+    Header unset Server
+</IfModule>
+
+# Disable server signature
+ServerSignature Off 
