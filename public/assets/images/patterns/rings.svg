@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="rings" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="15" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+      <circle cx="15" cy="15" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#rings)" opacity="0.1"/>
+</svg> 
