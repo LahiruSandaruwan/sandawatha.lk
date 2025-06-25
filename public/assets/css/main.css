@@ -4,4 +4,102 @@
     --primary-color: #FF4B91;
     --secondary-color: #FF7676;
     --accent-color: #FFE5E5;
+    --romantic-50: #fff1f2;
+    --romantic-100: #ffe4e6;
+    --romantic-200: #fecdd3;
+    --romantic-300: #fda4af;
+    --romantic-400: #fb7185;
+    --romantic-500: #f43f5e;
+    --romantic-600: #e11d48;
+    --romantic-700: #be123c;
+    --romantic-800: #9f1239;
+    --romantic-900: #881337;
+}
+
+/* Base Styles */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    color: #1a1a1a;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Flash Messages */
+.flash-message {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Aspect Ratio Utilities */
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%;
+}
+
+.aspect-w-16 > * {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.aspect-w-3 {
+    position: relative;
+    padding-bottom: 133.33%;
+}
+
+.aspect-w-3 > * {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* Line Clamp */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Focus Styles */
+.focus-ring {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(241, 63, 94, 0.5);
+}
+
+/* Transitions */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
 }

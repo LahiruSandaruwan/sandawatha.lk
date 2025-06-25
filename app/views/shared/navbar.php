@@ -1,175 +1,298 @@
 <?php
 // Get current page for active link highlighting
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
-$isLoggedIn = isset($_SESSION['user_id']);
 
-// Language handling (passed from parent)
-$languages = isset($languages) ? $languages : ['en' => 'English', 'si' => 'සිංහල', 'ta' => 'தமிழ்'];
-$currentLang = isset($currentLang) ? $currentLang : 'en';
-
-// Navigation items with active state handling
+// Navigation items
 $navItems = [
-    'match' => [
-        'label' => 'Find Matches',
-        'href' => '/match',
-        'icon' => 'fa-heart'
-    ],
-    'horoscope' => [
-        'label' => 'Horoscope Match',
-        'href' => '/horoscope/match',
-        'icon' => 'fa-star'
-    ],
-    'blog' => [
-        'label' => 'Blog',
-        'href' => '/blog',
-        'icon' => 'fa-pen'
-    ],
-    'about' => [
-        'label' => 'About',
-        'href' => '/about.php',
-        'icon' => 'fa-info-circle'
-    ],
-    'contact' => [
-        'label' => 'Contact',
-        'href' => '/contact.php',
-        'icon' => 'fa-envelope'
-    ]
+    'index' => ['label' => 'Home', 'href' => '/'],
+    'register' => ['label' => 'Register', 'href' => '/register.php', 'class' => 'lg:hidden'],
+    'login' => ['label' => 'Login', 'href' => '/login.php', 'class' => 'lg:hidden'],
+    'about' => ['label' => 'About', 'href' => '/about.php'],
+    'contact' => ['label' => 'Contact', 'href' => '/contact.php']
 ];
 
 // Check if logo exists
 $logoPath = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/logo.png';
 $hasLogo = file_exists($logoPath);
 
-// Helper function to determine if a nav item is active
-function isActive($href) {
-    $currentUrl = $_SERVER['REQUEST_URI'];
-    return $href === $currentUrl || ($href !== '/' && strpos($currentUrl, $href) === 0);
-}
+$isAuthenticated = isAuthenticated();
+$isAdmin = isAdmin();
 ?>
 
 <!-- Navigation -->
-<nav class="fixed w-full z-50 bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-20">
+<nav class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm transition-all duration-300" 
+     id="mainNav" 
+     aria-label="Main navigation">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
             <!-- Logo -->
-            <div class="flex-shrink-0 flex items-center">
-                <a href="/index.php" class="flex items-center">
-                    <!-- Inline SVG Logo with increased size -->
-                    <svg class="h-12 w-auto sm:h-14" viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Heart Icon -->
-                        <g transform="translate(10,25) scale(0.8)">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" 
-                                  fill="#E11D48" stroke="#E11D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </g>
-                        <!-- Text "Sandawatha.lk" -->
-                        <text x="50" y="50" font-family="'Playfair Display', serif" font-size="32" font-weight="600" fill="#1F2937">
-                            <tspan fill="#E11D48">Sanda</tspan><tspan>watha.lk</tspan>
-                        </text>
-                    </svg>
-                </a>
-            </div>
-
-            <!-- Navigation Links (Desktop) -->
-            <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
-                <a href="/" class="<?php echo $currentPage === 'index' ? 'text-romantic-600 border-romantic-500' : 'text-gray-500 hover:text-gray-900 border-transparent'; ?> inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                    Home
-                </a>
-                <a href="/about.php" class="<?php echo $currentPage === 'about' ? 'text-romantic-600 border-romantic-500' : 'text-gray-500 hover:text-gray-900 border-transparent'; ?> inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                    About
-                </a>
-                <a href="/horoscope/match" class="<?php echo $currentPage === 'match' ? 'text-romantic-600 border-romantic-500' : 'text-gray-500 hover:text-gray-900 border-transparent'; ?> inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                    Horoscope Match
-                </a>
-                <a href="/blog" class="<?php echo $currentPage === 'blog' ? 'text-romantic-600 border-romantic-500' : 'text-gray-500 hover:text-gray-900 border-transparent'; ?> inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                    Blog
-                </a>
-                <a href="/contact.php" class="<?php echo $currentPage === 'contact' ? 'text-romantic-600 border-romantic-500' : 'text-gray-500 hover:text-gray-900 border-transparent'; ?> inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                    Contact
-                </a>
-            </div>
-
-            <!-- Auth Buttons (Desktop) -->
-            <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-                <?php if ($isLoggedIn): ?>
-                    <a href="/profile" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-romantic-600 bg-romantic-50 hover:bg-romantic-100">
-                        My Profile
-                    </a>
-                    <a href="/logout.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-romantic-600 hover:bg-romantic-700">
-                        Logout
-                    </a>
+            <a href="/" class="flex items-center space-x-2 group" aria-label="Sandawatha.lk - Home">
+                <?php if ($hasLogo): ?>
+                    <img src="/assets/images/logo.png" 
+                         alt="Sandawatha.lk Logo" 
+                         class="h-10 w-auto"
+                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <!-- Fallback Icon (Hidden by default) -->
+                    <div class="hidden h-10 w-10 bg-red-100 rounded-full items-center justify-center">
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
                 <?php else: ?>
-                    <a href="/login.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-romantic-600 bg-romantic-50 hover:bg-romantic-100">
+                    <!-- Fallback Icon -->
+                    <div class="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                <?php endif; ?>
+                <div class="flex flex-col">
+                    <span class="text-xl font-semibold">
+                        <span class="text-primary group-hover:text-red-700 transition-colors duration-200">Sandawatha</span>
+                        <span class="text-secondary">.lk</span>
+                    </span>
+                    <span class="text-xs text-gray-500 hidden sm:block">Find Your Perfect Match</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-8">
+                <?php foreach ($navItems as $page => $item): ?>
+                    <?php if (empty($item['class']) || strpos($item['class'], 'lg:hidden') === false): ?>
+                        <a href="<?php echo htmlspecialchars($item['href']); ?>" 
+                           class="text-gray-700 hover:text-primary transition-colors duration-200 <?php echo $currentPage === $page ? 'text-primary font-semibold' : ''; ?>">
+                            <?php echo htmlspecialchars($item['label']); ?>
+                        </a>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+
+                <!-- Desktop Auth Buttons -->
+                <div class="flex items-center space-x-4">
+                    <?php if ($isAuthenticated): ?>
+                        <a href="/match" 
+                           class="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-200">
+                            Find Matches
+                        </a>
+                        <a href="/chat" 
+                           class="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-200">
+                            Messages
+                            <?php
+                            // Check for unread messages
+                            if (isset($_SESSION['unread_messages']) && $_SESSION['unread_messages'] > 0): ?>
+                                <span class="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-romantic-100 text-romantic-800">
+                                    <?php echo $_SESSION['unread_messages']; ?>
+                                </span>
+                            <?php endif; ?>
+                        </a>
+                        <div class="ml-3 relative">
+                            <div>
+                                <button type="button" 
+                                        class="profile-menu-button bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-romantic-500" 
+                                        id="user-menu-button" 
+                                        aria-expanded="false" 
+                                        aria-haspopup="true">
+                                    <span class="sr-only">Open user menu</span>
+                                    <img class="h-8 w-8 rounded-full object-cover" 
+                                         src="<?php echo isset($_SESSION['user_photo']) ? storage($_SESSION['user_photo']) : asset('images/default-avatar.png'); ?>" 
+                                         alt="Profile photo">
+                                </button>
+                            </div>
+                            <div class="profile-menu origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 hidden" 
+                                 role="menu" 
+                                 aria-orientation="vertical" 
+                                 aria-labelledby="user-menu-button" 
+                                 tabindex="-1">
+                                <a href="/profile" 
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                                   role="menuitem">Your Profile</a>
+                                
+                                <?php if ($isAdmin): ?>
+                                    <a href="/admin/dashboard" 
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                                       role="menuitem">Admin Dashboard</a>
+                                <?php endif; ?>
+                                
+                                <a href="/settings" 
+                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                                   role="menuitem">Settings</a>
+                                
+                                <form action="/logout" method="POST" class="block">
+                                    <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+                                    <button type="submit" 
+                                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                                            role="menuitem">Sign out</button>
+                                </form>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <a href="/login.php" 
+                           class="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-200">
+                            Login
+                        </a>
+                        <a href="/register.php" 
+                           class="px-6 py-2 bg-primary text-white rounded-full hover:bg-red-700 transition-all duration-200 transform hover:scale-105">
+                            Join Free
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button type="button" 
+                    id="mobileMenuBtn"
+                    class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-primary hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+                    aria-controls="mobileMenu"
+                    aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <!-- Menu Icon -->
+                <svg class="block h-6 w-6" 
+                     id="menuIcon"
+                     fill="none" 
+                     viewBox="0 0 24 24" 
+                     stroke="currentColor" 
+                     aria-hidden="true">
+                    <path stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          stroke-width="2" 
+                          d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <!-- Close Icon -->
+                <svg class="hidden h-6 w-6" 
+                     id="closeIcon"
+                     fill="none" 
+                     viewBox="0 0 24 24" 
+                     stroke="currentColor" 
+                     aria-hidden="true">
+                    <path stroke-linecap="round" 
+                          stroke-linejoin="round" 
+                          stroke-width="2" 
+                          d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="lg:hidden hidden transition-all duration-300 ease-in-out" id="mobileMenu">
+            <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
+                <?php foreach ($navItems as $page => $item): ?>
+                    <a href="<?php echo htmlspecialchars($item['href']); ?>" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200 <?php echo $currentPage === $page ? 'text-primary bg-gray-50' : ''; ?>">
+                        <?php echo htmlspecialchars($item['label']); ?>
+                    </a>
+                <?php endforeach; ?>
+
+                <?php if ($isAuthenticated): ?>
+                    <a href="/match" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Find Matches
+                    </a>
+                    <a href="/chat" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Messages
+                        <?php if (isset($_SESSION['unread_messages']) && $_SESSION['unread_messages'] > 0): ?>
+                            <span class="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-romantic-100 text-romantic-800">
+                                <?php echo $_SESSION['unread_messages']; ?>
+                            </span>
+                        <?php endif; ?>
+                    </a>
+                    <a href="/profile" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Your Profile
+                    </a>
+                    <?php if ($isAdmin): ?>
+                        <a href="/admin/dashboard" 
+                           class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
+                            Admin Dashboard
+                        </a>
+                    <?php endif; ?>
+                    <a href="/settings" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
+                        Settings
+                    </a>
+                    <form action="/logout" method="POST" class="block">
+                        <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+                        <button type="submit" 
+                                class="w-full text-left text-gray-700 hover:text-primary px-3 py-2 rounded-md text-base font-medium">
+                            Sign out
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <a href="/login.php" 
+                       class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200">
                         Login
                     </a>
-                    <a href="/register.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-romantic-600 hover:bg-romantic-700">
+                    <a href="/register.php" 
+                       class="bg-primary text-white px-3 py-2 rounded-md text-base font-medium">
                         Register
                     </a>
                 <?php endif; ?>
             </div>
-
-            <!-- Mobile menu button -->
-            <div class="flex items-center sm:hidden">
-                <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile menu -->
-    <div class="mobile-menu sm:hidden hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <a href="/" class="<?php echo $currentPage === 'index' ? 'bg-romantic-50 border-romantic-500 text-romantic-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'; ?> block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Home
-            </a>
-            <a href="/about.php" class="<?php echo $currentPage === 'about' ? 'bg-romantic-50 border-romantic-500 text-romantic-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'; ?> block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                About
-            </a>
-            <a href="/horoscope/match" class="<?php echo $currentPage === 'match' ? 'bg-romantic-50 border-romantic-500 text-romantic-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'; ?> block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Horoscope Match
-            </a>
-            <a href="/blog" class="<?php echo $currentPage === 'blog' ? 'bg-romantic-50 border-romantic-500 text-romantic-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'; ?> block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Blog
-            </a>
-            <a href="/contact.php" class="<?php echo $currentPage === 'contact' ? 'bg-romantic-50 border-romantic-500 text-romantic-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'; ?> block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                Contact
-            </a>
-        </div>
-        <div class="pt-4 pb-3 border-t border-gray-200">
-            <?php if ($isLoggedIn): ?>
-                <div class="space-y-1">
-                    <a href="/profile" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700">
-                        My Profile
-                    </a>
-                    <a href="/logout.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700">
-                        Logout
-                    </a>
-                </div>
-            <?php else: ?>
-                <div class="space-y-1">
-                    <a href="/login.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700">
-                        Login
-                    </a>
-                    <a href="/register.php" class="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700">
-                        Register
-                    </a>
-                </div>
-            <?php endif; ?>
         </div>
     </div>
 </nav>
 
-<!-- Mobile Menu Toggle Script -->
+<!-- Navigation Scripts -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
+$(document).ready(function() {
+    const $mobileMenuBtn = $('#mobileMenuBtn');
+    const $mobileMenu = $('#mobileMenu');
+    const $menuIcon = $('#menuIcon');
+    const $closeIcon = $('#closeIcon');
+    const $mainNav = $('#mainNav');
+    let lastScroll = 0;
 
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
+    // Mobile menu toggle
+    $mobileMenuBtn.on('click', function() {
+        const isExpanded = $(this).attr('aria-expanded') === 'true';
+        $(this).attr('aria-expanded', !isExpanded);
+        $mobileMenu.toggleClass('hidden');
+        $menuIcon.toggleClass('hidden');
+        $closeIcon.toggleClass('hidden');
     });
+
+    // Close mobile menu on window resize if screen becomes large
+    $(window).on('resize', function() {
+        if (window.innerWidth >= 1024) { // lg breakpoint
+            $mobileMenu.addClass('hidden');
+            $menuIcon.removeClass('hidden');
+            $closeIcon.addClass('hidden');
+            $mobileMenuBtn.attr('aria-expanded', 'false');
+        }
+    });
+
+    // Handle scroll behavior
+    $(window).on('scroll', function() {
+        const currentScroll = $(this).scrollTop();
+        
+        // Add shadow and background opacity based on scroll position
+        if (currentScroll > 0) {
+            $mainNav.addClass('shadow-md');
+        } else {
+            $mainNav.removeClass('shadow-md');
+        }
+
+        // Optional: Hide/show navbar on scroll up/down
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            // Scrolling down & past navbar
+            $mainNav.css('transform', 'translateY(-100%)');
+        } else {
+            // Scrolling up or at top
+            $mainNav.css('transform', 'translateY(0)');
+        }
+        
+        lastScroll = currentScroll;
+    });
+
+    // Close mobile menu when clicking outside
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#mobileMenu, #mobileMenuBtn').length) {
+            $mobileMenu.addClass('hidden');
+            $menuIcon.removeClass('hidden');
+            $closeIcon.addClass('hidden');
+            $mobileMenuBtn.attr('aria-expanded', 'false');
+        }
+    });
+});
 </script> 

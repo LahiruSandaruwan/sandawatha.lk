@@ -6,59 +6,25 @@
  * It includes error handling and connection management.
  */
 
+// Load environment variables
+require_once __DIR__ . '/env.php';
+
 class Database {
     private static $instance = null;
     private $connection = null;
-
-    /**
-     * Load environment variables from .env file
-     */
-    private function loadEnv() {
-        $envFile = __DIR__ . '/../.env';
-        
-        if (!file_exists($envFile)) {
-            throw new Exception('.env file not found');
-        }
-
-        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        
-        foreach ($lines as $line) {
-            // Skip comments
-            if (strpos(trim($line), '#') === 0) {
-                continue;
-            }
-
-            // Parse valid lines
-            if (strpos($line, '=') !== false) {
-                list($name, $value) = explode('=', $line, 2);
-                $name = trim($name);
-                $value = trim($value);
-                
-                // Remove quotes if present
-                if (preg_match('/^(["\']).*\1$/', $value)) {
-                    $value = substr($value, 1, -1);
-                }
-                
-                putenv("$name=$value");
-                $_ENV[$name] = $value;
-            }
-        }
-    }
 
     /**
      * Get database configuration from environment
      */
     private function getConfig() {
         return [
-            'driver' => getenv('DB_DRIVER') ?: 'mysql',
-            'host' => getenv('DB_HOST') ?: 'localhost',
-            'port' => getenv('DB_PORT') ?: '3306',
-            'database' => getenv('DB_DATABASE'),
-            'username' => getenv('DB_USERNAME'),
-            'password' => getenv('DB_PASSWORD'),
-            'charset' => getenv('DB_CHARSET') ?: 'utf8mb4',
-            'collation' => getenv('DB_COLLATION') ?: 'utf8mb4_unicode_ci',
-            'prefix' => getenv('DB_PREFIX') ?: ''
+            'host' => env('DB_HOST', 'localhost'),
+            'name' => env('DB_NAME', 'sandawatha'),
+            'user' => env('DB_USER', 'root'),
+            'pass' => env('DB_PASS', ''),
+            'port' => env('DB_PORT', 3306),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci'
         ];
     }
 
@@ -67,24 +33,15 @@ class Database {
      */
     private function __construct() {
         try {
-            // Load environment variables
-            $this->loadEnv();
-
             // Get configuration
             $config = $this->getConfig();
 
-            // Validate required configuration
-            if (empty($config['database']) || empty($config['username'])) {
-                throw new Exception('Database configuration is incomplete');
-            }
-
             // Build DSN
             $dsn = sprintf(
-                '%s:host=%s;port=%s;dbname=%s;charset=%s',
-                $config['driver'],
+                "mysql:host=%s;dbname=%s;port=%d;charset=%s",
                 $config['host'],
+                $config['name'],
                 $config['port'],
-                $config['database'],
                 $config['charset']
             );
 
@@ -99,8 +56,8 @@ class Database {
             // Create PDO instance
             $this->connection = new PDO(
                 $dsn,
-                $config['username'],
-                $config['password'],
+                $config['user'],
+                $config['pass'],
                 $options
             );
 
@@ -167,9 +124,213 @@ class Database {
     public function __wakeup() {}
 }
 
+/**
+ * Get database connection
+ * 
+ * @return PDO
+ * @throws PDOException
+ */
+function getConnection() {
+    $db = Database::getInstance()->getConnection();
+    return $db;
+}
+
+/**
+ * Execute a query and return all results
+ * 
+ * @param string $query The SQL query
+ * @param array $params Query parameters
+ * @return array The query results
+ */
+function query($query, $params = []) {
+    try {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Execute a query and return first result
+ * 
+ * @param string $query The SQL query
+ * @param array $params Query parameters
+ * @return array|null The first result or null
+ */
+function queryOne($query, $params = []) {
+    try {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetch() ?: null;
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Execute a query and return the last insert ID
+ * 
+ * @param string $query The SQL query
+ * @param array $params Query parameters
+ * @return int The last insert ID
+ */
+function insert($query, $params = []) {
+    try {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $pdo->lastInsertId();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Execute a query and return number of affected rows
+ * 
+ * @param string $query The SQL query
+ * @param array $params Query parameters
+ * @return int Number of affected rows
+ */
+function execute($query, $params = []) {
+    try {
+        $pdo = getConnection();
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params);
+        return $stmt->rowCount();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Begin a transaction
+ * 
+ * @return bool
+ */
+function beginTransaction() {
+    try {
+        $pdo = getConnection();
+        return $pdo->beginTransaction();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Commit a transaction
+ * 
+ * @return bool
+ */
+function commitTransaction() {
+    try {
+        $pdo = getConnection();
+        return $pdo->commit();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Rollback a transaction
+ * 
+ * @return bool
+ */
+function rollbackTransaction() {
+    try {
+        $pdo = getConnection();
+        return $pdo->rollBack();
+    } catch (PDOException $e) {
+        handleDatabaseError($e);
+    }
+}
+
+/**
+ * Handle database errors
+ * 
+ * @param PDOException $e The exception
+ * @throws PDOException
+ */
+function handleDatabaseError($e) {
+    // Log error
+    error_log("Database error: " . $e->getMessage());
+    
+    // Throw exception in debug mode
+    if (defined('DEBUG_MODE') && DEBUG_MODE) {
+        throw $e;
+    }
+    
+    // Show generic error in production
+    throw new PDOException('Database error occurred. Please try again later.');
+}
+
+/**
+ * Escape string for use in LIKE clause
+ * 
+ * @param string $string The string to escape
+ * @return string The escaped string
+ */
+function escapeLike($string) {
+    return str_replace(['%', '_'], ['\%', '\_'], $string);
+}
+
+/**
+ * Build WHERE clause from conditions
+ * 
+ * @param array $conditions The conditions
+ * @return array [clause, params]
+ */
+function buildWhereClause($conditions) {
+    $where = [];
+    $params = [];
+    
+    foreach ($conditions as $column => $value) {
+        if (is_null($value)) {
+            $where[] = "`$column` IS NULL";
+        } else {
+            $where[] = "`$column` = ?";
+            $params[] = $value;
+        }
+    }
+    
+    return [
+        implode(' AND ', $where),
+        $params
+    ];
+}
+
+/**
+ * Build SET clause from data
+ * 
+ * @param array $data The data
+ * @return array [clause, params]
+ */
+function buildSetClause($data) {
+    $set = [];
+    $params = [];
+    
+    foreach ($data as $column => $value) {
+        if (is_null($value)) {
+            $set[] = "`$column` = NULL";
+        } else {
+            $set[] = "`$column` = ?";
+            $params[] = $value;
+        }
+    }
+    
+    return [
+        implode(', ', $set),
+        $params
+    ];
+}
+
 // Create and return database connection
 try {
-    $db = Database::getInstance()->getConnection();
+    $db = getConnection();
 } catch (Exception $e) {
     // Handle connection error
     if (php_sapi_name() === 'cli') {

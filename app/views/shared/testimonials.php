@@ -1,130 +1,97 @@
 <?php
-// Testimonials data (passed from parent)
-$testimonials = isset($testimonials) ? $testimonials : [
-    [
-        'name' => 'Priya & Ashan',
-        'photo' => 'https://images.unsplash.com/photo-1621784563330-caee0b138a00?auto=format&fit=crop&w=400&q=80',
-        'placeholder' => 'https://images.unsplash.com/photo-1621784563330-caee0b138a00?auto=format&fit=crop&w=50&q=20&blur=10',
-        'message' => 'We found each other on Sandawatha.lk and our horoscopes matched perfectly! Now happily married for 2 years.',
-        'rating' => 5,
-        'location' => 'Colombo'
-    ],
-    [
-        'name' => 'Malini & Dinesh',
-        'photo' => 'https://images.unsplash.com/photo-1623069923731-45e5d19f6f0f?auto=format&fit=crop&w=400&q=80',
-        'placeholder' => 'https://images.unsplash.com/photo-1623069923731-45e5d19f6f0f?auto=format&fit=crop&w=50&q=20&blur=10',
-        'message' => 'The AI matching system introduced us, and it was like magic from our first meeting. Getting married next month!',
-        'rating' => 5,
-        'location' => 'Kandy'
-    ],
-    [
-        'name' => 'Kumari & Rajitha',
-        'photo' => 'https://images.unsplash.com/photo-1621784562877-01a79135c0c5?auto=format&fit=crop&w=400&q=80',
-        'placeholder' => 'https://images.unsplash.com/photo-1621784562877-01a79135c0c5?auto=format&fit=crop&w=50&q=20&blur=10',
-        'message' => 'Thank you Sandawatha for helping us find true love. The verification process gave us peace of mind.',
-        'rating' => 5,
-        'location' => 'Galle'
-    ]
-];
+/**
+ * Testimonials Section
+ * Success stories from happy couples
+ */
 ?>
+<section class="py-24 bg-white relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-romantic-50/50 to-transparent"></div>
+        <div class="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="w-96 h-96 bg-romantic-100 rounded-full opacity-20 blur-3xl"></div>
+        </div>
+    </div>
 
-<section class="py-24 bg-romantic-50 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-16">
-            <h2 class="text-3xl font-display font-bold text-gray-900 sm:text-4xl">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section header -->
+        <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
                 Success Stories
             </h2>
-            <p class="mt-4 text-xl text-gray-600">
-                Hear from couples who found their perfect match on Sandawatha.lk
+            <p class="mt-4 text-lg text-gray-600">
+                Real couples who found their perfect match on Sandawatha.lk
             </p>
         </div>
 
-        <!-- Testimonials Slider -->
-        <div class="swiper testimonials-slider">
-            <div class="swiper-wrapper">
-                <?php foreach ($testimonials as $testimonial): ?>
-                    <div class="swiper-slide p-4">
-                        <div class="bg-white rounded-2xl shadow-sm p-8 h-full">
-                            <!-- Testimonial Header -->
-                            <div class="flex items-center mb-6">
-                                <div class="relative w-16 h-16 rounded-full overflow-hidden mr-4">
-                                    <!-- Placeholder image while loading -->
-                                    <img src="<?php echo htmlspecialchars($testimonial['placeholder']); ?>" 
-                                         class="absolute inset-0 w-full h-full object-cover blur-lg" 
-                                         alt="">
-                                    <!-- Main image -->
-                                    <img src="<?php echo htmlspecialchars($testimonial['photo']); ?>" 
-                                         class="absolute inset-0 w-full h-full object-cover" 
-                                         alt="<?php echo htmlspecialchars($testimonial['name']); ?>"
-                                         loading="lazy">
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900">
-                                        <?php echo htmlspecialchars($testimonial['name']); ?>
-                                    </h3>
-                                    <p class="text-gray-600">
-                                        <?php echo htmlspecialchars($testimonial['location']); ?>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Rating Stars -->
-                            <div class="flex items-center mb-4">
-                                <?php for ($i = 0; $i < $testimonial['rating']; $i++): ?>
-                                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                    </svg>
-                                <?php endfor; ?>
-                            </div>
-
-                            <!-- Testimonial Message -->
-                            <blockquote class="text-gray-600 italic">
-                                "<?php echo htmlspecialchars($testimonial['message']); ?>"
-                            </blockquote>
-                        </div>
+        <!-- Testimonials grid -->
+        <div class="mt-20 grid gap-8 lg:grid-cols-3 sm:grid-cols-2">
+            <?php foreach ($testimonials as $testimonial): ?>
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:-translate-y-1" data-aos="fade-up">
+                <!-- Couple photo -->
+                <div class="aspect-w-16 aspect-h-9 relative">
+                    <img class="object-cover w-full h-full" 
+                         src="<?php echo asset($testimonial['photo']); ?>" 
+                         alt="<?php echo htmlspecialchars($testimonial['name']); ?>"
+                         onerror="this.onerror=null; this.src='<?php echo asset($testimonial['placeholder']); ?>';">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 class="text-xl font-semibold"><?php echo htmlspecialchars($testimonial['name']); ?></h3>
+                        <p class="text-sm text-romantic-100"><?php echo htmlspecialchars($testimonial['location']); ?></p>
                     </div>
-                <?php endforeach; ?>
+                </div>
+
+                <!-- Testimonial content -->
+                <div class="p-6">
+                    <!-- Rating -->
+                    <div class="flex items-center mb-4">
+                        <?php for ($i = 0; $i < $testimonial['rating']; $i++): ?>
+                        <svg class="w-5 h-5 text-romantic-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <?php endfor; ?>
+                    </div>
+
+                    <!-- Quote -->
+                    <div class="relative">
+                        <svg class="absolute top-0 left-0 transform -translate-x-6 -translate-y-8 h-16 w-16 text-romantic-100" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z"/>
+                        </svg>
+                        <p class="relative text-base text-gray-500">
+                            <?php echo htmlspecialchars($testimonial['message']); ?>
+                        </p>
+                    </div>
+                </div>
             </div>
+            <?php endforeach; ?>
+        </div>
 
-            <!-- Navigation Buttons -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+        <!-- Stats -->
+        <div class="mt-20">
+            <dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
+                <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+                    <dt class="text-base leading-7 text-gray-600">Happy Couples</dt>
+                    <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">10,000+</dd>
+                </div>
+                <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+                    <dt class="text-base leading-7 text-gray-600">Success Rate</dt>
+                    <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">89%</dd>
+                </div>
+                <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+                    <dt class="text-base leading-7 text-gray-600">Years of Service</dt>
+                    <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">15+</dd>
+                </div>
+            </dl>
+        </div>
 
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
+        <!-- CTA -->
+        <div class="mt-16 text-center">
+            <a href="/success-stories" class="inline-flex items-center text-romantic-600 font-medium hover:text-romantic-700">
+                Read More Success Stories
+                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
         </div>
     </div>
-</section>
-
-<script>
-$(document).ready(function() {
-    new Swiper('.testimonials-slider', {
-        slidesPerView: 1,
-        spaceBetween: 32,
-        loop: true,
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 1,
-            },
-            768: {
-                slidesPerView: 2,
-            },
-            1024: {
-                slidesPerView: 3,
-            },
-        },
-    });
-});</script> 
+</section> 
