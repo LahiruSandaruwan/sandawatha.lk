@@ -5,11 +5,11 @@
  */
 
 // Define image paths
-$heroImage = '/assets/images/hero-image.jpg';
-$placeholderImage = '/assets/images/placeholder.svg';
+$heroImage = 'images/hero-image.jpg';
+$placeholderImage = 'images/placeholder.svg';
 
 // Check if hero image exists, otherwise use placeholder
-$imagePath = file_exists(PUBLIC_PATH . $heroImage) ? $heroImage : $placeholderImage;
+$imagePath = file_exists(PUBLIC_PATH . '/assets/' . $heroImage) ? $heroImage : $placeholderImage;
 ?>
 <section class="relative min-h-screen bg-gradient-to-b from-romantic-50 to-white overflow-hidden">
     <!-- Decorative background elements -->
@@ -98,9 +98,9 @@ $imagePath = file_exists(PUBLIC_PATH . $heroImage) ? $heroImage : $placeholderIm
                     <div class="bg-white rounded-2xl shadow-xl p-6 backdrop-blur-sm bg-white/90">
                         <div class="flex items-center space-x-4">
                             <div class="flex -space-x-2">
-                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('/assets/images/testimonials/couple1.jpg'); ?>" alt="">
-                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('/assets/images/testimonials/couple2.jpg'); ?>" alt="">
-                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('/assets/images/testimonials/couple3.jpg'); ?>" alt="">
+                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('images/placeholder.svg'); ?>" alt="">
+                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('images/placeholder.svg'); ?>" alt="">
+                                <img class="w-10 h-10 rounded-full border-2 border-white" src="<?php echo asset('images/placeholder.svg'); ?>" alt="">
                             </div>
                             <div>
                                 <div class="text-sm font-medium text-gray-900">10,000+ Happy Couples</div>

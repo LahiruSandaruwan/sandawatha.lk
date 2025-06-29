@@ -327,63 +327,31 @@ if (!function_exists('env')) {
     /**
      * Get environment variable
      * 
-     * @param string $key The variable name
+     * @param string $key The environment variable name
      * @param mixed $default Default value if not found
      * @return mixed The environment variable value
      */
     function env($key, $default = null) {
-        return $_ENV[$key] ?? $default;
+        $value = getenv($key);
+        if ($value === false) {
+            return $default;
+        }
+        
+        switch (strtolower($value)) {
+            case 'true':
+            case '(true)':
+                return true;
+            case 'false':
+            case '(false)':
+                return false;
+            case 'null':
+            case '(null)':
+                return null;
+        }
+        
+        return $value;
     }
 }
 
-if (!function_exists('routeExists')) {
-    /**
-     * Check if route exists
-     * 
-     * @param string $route The route to check
-     * @return bool Whether route exists
-     */
-    function routeExists($route) {
-        global $routes;
-        return isset($routes[$route]);
-    }
-}
-
-if (!function_exists('getRouteFile')) {
-    /**
-     * Get route file path
-     * 
-     * @param string $route The route
-     * @return string|null The file path
-     */
-    function getRouteFile($route) {
-        global $routes;
-        return $routes[$route] ?? null;
-    }
-}
-
-if (!function_exists('requiresAuth')) {
-    /**
-     * Check if route requires authentication
-     * 
-     * @param string $route The route to check
-     * @return bool Whether route requires authentication
-     */
-    function requiresAuth($route) {
-        global $protectedRoutes;
-        return in_array($route, $protectedRoutes);
-    }
-}
-
-if (!function_exists('requiresAdmin')) {
-    /**
-     * Check if route requires admin access
-     * 
-     * @param string $route The route to check
-     * @return bool Whether route requires admin access
-     */
-    function requiresAdmin($route) {
-        global $adminRoutes;
-        return in_array($route, $adminRoutes);
-    }
-} 
+// The routing functions have been moved to routes/router.php
+// and routes/helpers.php 

@@ -382,5 +382,6 @@ DB_COLLATION=utf8mb4_unicode_ci
 DB_PREFIX=
 */
 
-return $db;
+// Return database connection
+return getConnection();
 ?> 

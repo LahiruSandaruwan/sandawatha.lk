@@ -1,6 +1,12 @@
 <?php
-// Define base routes
-$routes = [
+/**
+ * Application Routes Configuration
+ * 
+ * This file defines all the routes for the Sandawatha.lk application.
+ * Each route is mapped to a specific file path relative to the project root.
+ */
+
+return [
     // Public routes
     '/' => 'app/pages/home.php',
     '/about' => 'app/pages/about.php',
@@ -29,41 +35,4 @@ $routes = [
     '/api/verify' => 'api/verify.php',
     '/api/gifts' => 'api/gifts.php',
     '/api/referrals' => 'api/referrals.php',
-];
-
-// Error pages
-$errorPages = [
-    '404' => 'app/pages/errors/404.php',
-    '403' => 'app/pages/errors/403.php',
-    '500' => 'app/pages/errors/500.php',
-];
-
-// Route groups that require authentication
-$authRequired = [
-    '/profile',
-    '/profile/edit',
-    '/chat',
-    '/match',
-    '/horoscope/match'
-];
-
-// Route groups that require admin access
-$adminRequired = [
-    '/admin/dashboard',
-    '/admin/users',
-    '/admin/reports'
-];
-
-// Export route configuration
-return [
-    'routes' => $routes,
-    'errorPages' => $errorPages,
-    'authRequired' => $authRequired,
-    'adminRequired' => $adminRequired,
-    'api' => [
-        '/api/match-ai' => 'api/match-ai.php',
-        '/api/verify' => 'api/verify.php',
-        '/api/gifts' => 'api/gifts.php',
-        '/api/referrals' => 'api/referrals.php',
-    ]
 ]; 

@@ -31,9 +31,9 @@
                 <!-- Couple photo -->
                 <div class="aspect-w-16 aspect-h-9 relative">
                     <img class="object-cover w-full h-full" 
-                         src="<?php echo asset($testimonial['photo']); ?>" 
+                         src="<?php echo asset(str_replace('/assets/', '', $testimonial['photo'])); ?>" 
                          alt="<?php echo htmlspecialchars($testimonial['name']); ?>"
-                         onerror="this.onerror=null; this.src='<?php echo asset($testimonial['placeholder']); ?>';">
+                         onerror="this.onerror=null; this.src='<?php echo asset('images/placeholder.svg'); ?>';">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div class="absolute bottom-4 left-4 text-white">
                         <h3 class="text-xl font-semibold"><?php echo htmlspecialchars($testimonial['name']); ?></h3>

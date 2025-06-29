@@ -27,6 +27,9 @@ try {
     if (!$pdo) {
         throw new Exception("Database connection failed");
     }
+    
+    // Test the connection
+    $pdo->query("SELECT 1");
 
     // Fetch featured profiles
     $stmt = $pdo->prepare("
@@ -82,24 +85,24 @@ $socialLinks = [
 $testimonials = [
     [
         'name' => 'Priya & Ashan',
-        'photo' => '/assets/images/testimonials/couple1.jpg',
-        'placeholder' => '/assets/images/testimonials/couple1-placeholder.jpg',
+        'photo' => 'images/testimonials/couple1.jpg',
+        'placeholder' => 'images/placeholder.svg',
         'message' => 'We found each other on Sandawatha.lk and our horoscopes matched perfectly! Now happily married for 2 years.',
         'rating' => 5,
         'location' => 'Colombo'
     ],
     [
         'name' => 'Malini & Dinesh',
-        'photo' => '/assets/images/testimonials/couple2.jpg',
-        'placeholder' => '/assets/images/testimonials/couple2-placeholder.jpg',
+        'photo' => 'images/testimonials/couple2.jpg',
+        'placeholder' => 'images/placeholder.svg',
         'message' => 'The AI matching system introduced us, and it was like magic from our first meeting. Getting married next month!',
         'rating' => 5,
         'location' => 'Kandy'
     ],
     [
         'name' => 'Kumari & Rajitha',
-        'photo' => '/assets/images/testimonials/couple3.jpg',
-        'placeholder' => '/assets/images/testimonials/couple3-placeholder.jpg',
+        'photo' => 'images/testimonials/couple3.jpg',
+        'placeholder' => 'images/placeholder.svg',
         'message' => 'Thank you Sandawatha for helping us find true love. The verification process gave us peace of mind.',
         'rating' => 5,
         'location' => 'Galle'
@@ -135,9 +138,10 @@ $testimonials = [
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                         <div class="aspect-w-3 aspect-h-4">
                             <img class="object-cover w-full h-full" 
-                                 src="<?php echo htmlspecialchars($profile['profile_photo']); ?>" 
+                                 src="<?php echo isset($profile['profile_photo']) ? htmlspecialchars($profile['profile_photo']) : asset('images/placeholder.svg'); ?>" 
                                  alt="<?php echo htmlspecialchars($profile['name']); ?>'s photo"
-                                 loading="lazy">
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='<?php echo asset('images/placeholder.svg'); ?>'">
                         </div>
                         <div class="p-6">
                             <h3 class="text-xl font-semibold text-gray-900"><?php echo htmlspecialchars($profile['name']); ?></h3>

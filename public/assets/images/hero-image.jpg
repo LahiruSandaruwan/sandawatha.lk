@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Pattern -->
+    <rect width="1200" height="800" fill="#FFF1F2"/>
+    <path fill="#FDA4AF" fill-opacity="0.2" d="M0 0h1200v800H0z"/>
+    
+    <!-- Decorative Elements -->
+    <g opacity="0.1">
+        <circle cx="600" cy="400" r="300" stroke="#F43F5E" stroke-width="2"/>
+        <circle cx="600" cy="400" r="200" stroke="#F43F5E" stroke-width="2"/>
+        <circle cx="600" cy="400" r="100" stroke="#F43F5E" stroke-width="2"/>
+    </g>
+    
+    <!-- Hearts Pattern -->
+    <g fill="#F43F5E" opacity="0.1">
+        <path d="M600 300c30-60 90-60 120 0s-60 120-120 120-150-60-120-120 90-60 120 0z"/>
+        <path d="M400 500c20-40 60-40 80 0s-40 80-80 80-100-40-80-80 60-40 80 0z"/>
+        <path d="M800 500c20-40 60-40 80 0s-40 80-80 80-100-40-80-80 60-40 80 0z"/>
+    </g>
+    
+    <!-- Couple Silhouette -->
+    <g transform="translate(450,250)" fill="#F43F5E" opacity="0.8">
+        <path d="M150 300c55 0 100-45 100-100s-45-100-100-100-100 45-100 100 45 100 100 100z"/>
+        <path d="M300 300c55 0 100-45 100-100s-45-100-100-100-100 45-100 100 45 100 100 100z"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="600" y="600" font-family="Arial" font-size="24" fill="#F43F5E" text-anchor="middle">
+        Find Your Perfect Match
+    </text>
+</svg> 
