@@ -4,11 +4,13 @@
  * Loads environment variables from .env file
  */
 
-// Set session configuration before starting the session
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', false); // Will be set to true in production
-ini_set('session.cookie_samesite', 'Lax');
+// Set session configuration
+$sessionConfig = [
+    'cookie_httponly' => 1,
+    'use_only_cookies' => 1,
+    'cookie_secure' => false, // Will be set to true in production
+    'cookie_samesite' => 'Lax'
+];
 
 // Load environment variables from .env file
 function loadEnv() {
@@ -151,19 +153,19 @@ if (env('APP_ENV') === 'production') {
 }
 
 // Define common constants
-define('APP_NAME', env('APP_NAME', 'Sandawatha.lk'));
-define('APP_ENV', env('APP_ENV', 'local'));
-define('APP_URL', env('APP_URL', 'http://localhost'));
+if (!defined('APP_NAME')) define('APP_NAME', env('APP_NAME', 'Sandawatha.lk'));
+if (!defined('APP_ENV')) define('APP_ENV', env('APP_ENV', 'local'));
+if (!defined('APP_URL')) define('APP_URL', env('APP_URL', 'http://localhost'));
 
 // Define path constants
-define('ROOT_PATH', dirname(__DIR__));
-define('APP_PATH', ROOT_PATH . '/app');
-define('CONFIG_PATH', ROOT_PATH . '/config');
-define('PUBLIC_PATH', ROOT_PATH . '/public');
-define('STORAGE_PATH', ROOT_PATH . '/storage');
-define('CACHE_PATH', STORAGE_PATH . '/cache');
-define('LOGS_PATH', STORAGE_PATH . '/logs');
-define('UPLOADS_PATH', STORAGE_PATH . '/uploads');
+if (!defined('ROOT_PATH')) define('ROOT_PATH', dirname(__DIR__));
+if (!defined('APP_PATH')) define('APP_PATH', ROOT_PATH . '/app');
+if (!defined('CONFIG_PATH')) define('CONFIG_PATH', ROOT_PATH . '/config');
+if (!defined('PUBLIC_PATH')) define('PUBLIC_PATH', ROOT_PATH . '/public');
+if (!defined('STORAGE_PATH')) define('STORAGE_PATH', ROOT_PATH . '/storage');
+if (!defined('CACHE_PATH')) define('CACHE_PATH', STORAGE_PATH . '/cache');
+if (!defined('LOGS_PATH')) define('LOGS_PATH', STORAGE_PATH . '/logs');
+if (!defined('UPLOADS_PATH')) define('UPLOADS_PATH', STORAGE_PATH . '/uploads');
 
 // Create storage directories if they don't exist
 $directories = [

@@ -30,7 +30,7 @@ $legalLinks = [
             <!-- Company Info -->
             <div>
                 <div class="flex items-center mb-6">
-                    <img src="<?php echo asset('images/logo.svg'); ?>" alt="Sandawatha.lk" class="h-8 w-auto">
+                    <img src="<?php echo asset('images/logo.svg'); ?>" alt="Sandawatha.lk" class="h-8 w-auto" onerror="this.style.display='none';">
                     <span class="ml-2 text-xl font-semibold">Sandawatha.lk</span>
                 </div>
                 <p class="text-gray-400 mb-6">
@@ -110,9 +110,9 @@ $legalLinks = [
                     &copy; <?php echo date('Y'); ?> Sandawatha.lk. All rights reserved.
                 </p>
                 <div class="mt-4 md:mt-0">
-                    <img src="<?php echo asset('images/payment/visa.svg'); ?>" alt="Visa" class="h-8 inline-block">
-                    <img src="<?php echo asset('images/payment/mastercard.svg'); ?>" alt="Mastercard" class="h-8 inline-block ml-2">
-                    <img src="<?php echo asset('images/payment/paypal.svg'); ?>" alt="PayPal" class="h-8 inline-block ml-2">
+                    <img src="<?php echo asset('images/payment/visa.svg'); ?>" alt="Visa" class="h-8 inline-block" onerror="this.style.display='none';">
+                    <img src="<?php echo asset('images/payment/mastercard.svg'); ?>" alt="Mastercard" class="h-8 inline-block ml-2" onerror="this.style.display='none';">
+                    <img src="<?php echo asset('images/payment/paypal.svg'); ?>" alt="PayPal" class="h-8 inline-block ml-2" onerror="this.style.display='none';">
                 </div>
             </div>
         </div>
